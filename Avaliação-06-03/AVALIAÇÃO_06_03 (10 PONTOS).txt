@@ -1,0 +1,76 @@
+O total de pacientes  
+SELECT COUNT(*) AS total_pacientes FROM paciente; 
+ 
+-------------------------------------------------------------
+O médico com maior salário 
+
+SELECT MAX(salario_medico) FROM medico;
+
+-------------------------------------------------------------
+Exibir o médico que realizou maior quantidade de consultas.
+
+SELECT crm, COUNT(*) AS total_consultas FROM consulta
+GROUP BY crm
+ORDER BY total_consultas DESC LIMIT 1;
+
+--------------------------------------------------------------
+Somar o total a pagar de uma determinada consulta de um paciente e seus procedimentos realizados.
+
+SELECT c.id_consulta, p.nome_paciente AS nome_paciente, SUM(pr.valor_procedimento) AS total_a_pagar
+FROM consulta c
+JOIN paciente p ON c.id_paciente = p.id_paciente
+JOIN procedimento pr ON c.id_consulta = pr.id_consulta
+WHERE c.id_consulta = 1
+GROUP BY c.id_consulta , p.nome_paciente;
+ 
+----------------------------------------------------------------
+Listar todos os procedimentos de um paciente em uma determinada consulta. 
+
+SELECT p.id_procedimento, p.quantidade_procedimento, e.tipo_exame, c.id_paciente FROM procedimento p 
+INNER JOIN consulta c
+ON p.id_consulta = c.id_consulta
+INNER JOIN exame e
+ON p.id_exame = e.id_exame
+WHERE c.id_paciente = 
+
+--------------------------------------------------------------------------------------------------------
+Listar qual o procedimento mais utilizado no ambulatório pelos pacientes. 
+
+SELECT e.tipo_exame, COUNT(pr.id_exame) AS total_utilizado FROM procedimento pr
+INNER JOIN exame e
+ON e.id_exame = pr.id_exame
+GROUP BY pr.id_exame, e.tipo_exame
+
+----------------------------------------------------------------------------------
+Listar o nome dos pacientes que nunca fizeram exames.
+
+SELECT p.id_paciente, p.nome_paciente
+FROM paciente  p
+LEFT JOIN procedimento pr ON p.id_paciente = pr.id_exame
+WHERE pr.id_exame IS NULL;
+
+-------------------------------------------------------------------------------
+Atualizar os exames de raio x para que tenham um aumento de 8%.
+
+UPDATE exame
+SET valor_exame = valor_exame * 1.08
+WHERE id_exame = 6 ;
+
+SELECT id_exame, tipo_exame, valor_exame
+FROM exame
+WHERE id_exame = 6;
+------------------------------------------------------------------------------------
+ 
+Excluir os pacientes que nunca fizeram uma consulta. 
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
+
+-------------------------------------------------------------------------------------
+
+Totalizar o faturamento da clínica em um determinado período.
+
+SELECT SUM(p.valor_procedimento) AS faturamento_total
+FROM procedimento p
+INNER JOIN consulta c
+ON c.id_consulta = p.id_consulta
+WHERE c.data_consulta >= '2024-03-01' AND c.data_consulta <= '2024-03-02';
